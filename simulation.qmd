@@ -1,0 +1,185 @@
+---
+title: "Simulation of Craps Code"
+format: html
+---
+
+This document uses the craps code functions to explore interesting probabilities and distributions, helping understand the game mechanics through data.
+
+------------------------------------------------------------------------
+
+## **1. Simulating Craps Games**
+
+### Problem Statement
+
+Before analyzing probabilities and distributions, we need to generate data by simulating multiple games of craps.
+
+### Code
+
+```{r, message=FALSE, warning=FALSE}
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+library(kableExtra)
+
+# Source the craps functions defined previously
+source("craps-code.R")
+
+# Set the number of simulations
+set.seed(432)  # For reproducibility
+num_simulations <- 10000  # Number of games to simulate
+
+# Run the simulations using the `run_craps_simulation` function
+simulation_results <- run_craps_simulation(num_simulations)
+```
+
+------------------------------------------------------------------------
+
+## **2. Distribution of Points**
+
+### Problem Statement
+
+What is the distribution of points?
+
+### Code
+
+```{r, message=FALSE, warning=FALSE}
+# Filter games with a valid point set
+point_games <- simulation_results %>%
+  filter(!is.na(point))
+
+# Count occurrences of each point
+point_distribution <- point_games %>%
+  group_by(point) %>%
+  summarize(count = n()) %>%
+  mutate(proportion = count / sum(count)) %>%
+  arrange(desc(count))
+
+# Display the table
+point_distribution %>%
+  kbl(
+    caption = "Distribution of Points Set During Craps Simulations",
+    col.names = c("Point", "Count", "Proportion")
+  ) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
+
+### Visualization
+
+```{r, message=FALSE, warning=FALSE}
+# Plot point distribution
+ggplot(point_distribution, aes(x = factor(point), y = proportion, fill = factor(point))) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Proportion of Points Set During Craps Simulations",
+    x = "Point Value",
+    y = "Proportion"
+  ) +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2")
+```
+
+------------------------------------------------------------------------
+
+## **3. Probability of Winning After Entering the Point Phase**
+
+### Problem Statement
+
+What is the probability of winning after entering the Point Phase?
+
+### Code
+
+```{r, message=FALSE, warning=FALSE}
+# Calculate total games and wins in the point-roll phase
+total_point_games <- nrow(point_games)
+total_point_wins <- sum(point_games$outcome == "w")
+probability_win_point_phase <- total_point_wins / total_point_games
+
+# Display the result in a table
+data.frame(
+  "Total Point Games" = total_point_games,
+  "Wins in Point Phase" = total_point_wins,
+  "Probability of Winning in Point Phase" = probability_win_point_phase
+) %>%
+  kbl(caption = "Probability of Winning in Point Phase") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
+
+------------------------------------------------------------------------
+
+## **4. Variability in Game Lengths**
+
+### Problem Statement
+
+How does the length of a game vary between wins and losses?
+
+### Code
+
+```{r, message=FALSE, warning=FALSE}
+# Compare game lengths between wins and losses
+simulation_results %>%
+  group_by(outcome) %>%
+  summarize(mean_rolls = mean(n_rolls), sd_rolls = sd(n_rolls)) %>%
+  kbl(
+    caption = "Game Length Variability by Outcome",
+    col.names = c("Outcome", "Mean Rolls", "Standard Deviation")
+  ) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
+
+### Visualization
+
+```{r, message=FALSE, warning=FALSE}
+# Boxplot of game lengths by outcome
+ggplot(simulation_results, aes(x = outcome, y = n_rolls, fill = outcome)) +
+  geom_boxplot() +
+  labs(
+    title = "Game Length by Outcome",
+    x = "Outcome",
+    y = "Number of Rolls"
+  ) +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set1")
+```
+
+------------------------------------------------------------------------
+
+## **5. Summary of Wins and Losses**
+
+### Problem Statement
+
+What is the total number of wins and losses across all games?
+
+### Code
+
+```{r, message=FALSE, warning=FALSE}
+# Count wins and losses
+win_loss_summary <- simulation_results %>%
+  group_by(outcome) %>%
+  summarize(count = n(), proportion = count / nrow(simulation_results))
+
+# Display the summary
+win_loss_summary %>%
+  kbl(
+    caption = "Summary of Wins and Losses",
+    col.names = c("Outcome", "Count", "Proportion")
+  ) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
+
+------------------------------------------------------------------------
+
+## Summary
+
+This document analyzes craps simulations to uncover interesting probabilities and patterns.
+
+### The distribution of points during the Point Phase
+Point outcomes that result from more combinations of two dice being rolled are more likely to occur, which makes sense. We can see that Point outcome 8, which results from [(2,6), (3,5), (4,4), (5,3), (6,2)], and Point outcome 6, which results from 5 combinations too, correspond to the two highest probabilities. 
+
+### The probability of winning in the Point Phase
+You are more likely to lose than to win when entering a Point Phase. This aligns with the fact a roll of 7, which results in a loss, is more likely to happen than any Point roll that leads to a win. A roll of 7 results from 6 combinations [(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)], and therefore, has a higher probability to occur. 
+
+### Variability in game lengths across outcomes. 
+Wins are associated with shorter games. This is due to the fact a direct win is more likely to happen than a direct loss (7 and 11 result from 8 collective combinations while 2, 3 and 12 result from 4 collective combinations).
+
+### Total wins and losses across simulations
+This is also a bit tricky since a direct win is more likely to happen than a direct loss, however, a loss in a point phase is more likely to happen. It seems with the point phase results incorporated, we have equal of chance of winning/losing.

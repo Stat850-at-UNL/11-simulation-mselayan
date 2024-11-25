@@ -96,9 +96,7 @@ Create a flowchart illustrating how the game unfolds, using the function names p
 
 ## Issues with the code
 
-The condition isComeOutRoll(roll) only evaluates whether the roll is one of [2, 3, 7, 11, 12].
-If the roll is NOT one of these numbers (e.g., 4, 5, 6, 8, 9, or 10), it directly bypasses handleComeOutRoll(roll) and jumps to handlePointRoll(roll).
-This means handleComeOutRoll(roll) is never executed for rolls that establish a point, making the call to displayPointMessage(point) unreachable! This is why I omitted displayPointMessage(point) from my flowchart.
+The condition isComeOutRoll(roll) only evaluates whether the roll is one of \[2, 3, 7, 11, 12\]. If the roll is NOT one of these numbers (e.g., 4, 5, 6, 8, 9, or 10), it directly bypasses handleComeOutRoll(roll) and jumps to handlePointRoll(roll). This means handleComeOutRoll(roll) is never executed for rolls that establish a point, making the call to displayPointMessage(point) unreachable! This is why I omitted displayPointMessage(point) from my flowchart.
 
 ## Single game data structure {#sec-single-game-data}
 
@@ -106,29 +104,27 @@ It's one thing to write a set of instructions/pseudocode for how to *play* a gam
 
 Draw/sketch a tabular data structure that can store the results as you progress through a single game of craps. Keep track of how many times you've rolled the dice. What additional columns do you need? Hint: Each roll of the 2 dice should be a row.
 
-| **Game ID** | **Roll Number** | **Die 1** | **Die 2** | **Total Roll** | **Is Come-Out Roll?** | **Point (if applicable)** | **Outcome**                | **Game Status**      | **Play Again?** |
-|-------------|------------------|-----------|-----------|----------------|------------------------|---------------------------|---------------------------|-----------------------|-----------------|
-| 1           | 1                | 4         | 3         | 7              | Yes                    | N/A                       | Player Wins (Direct Win)  | Game Over            | True            |
-| 2           | 1                | 1         | 2         | 3              | Yes                    | N/A                       | Player Loses (Direct Loss)| Game Over            | True            |
-| 3           | 1                | 3         | 2         | 5              | No                     | 5                         | Point Set                 | Continue             |                 |
-| 3           | 2                | 4         | 3         | 7              | No                     | 5                         | Player Loses (Point Phase)| Game Over            | True            |
-| 4           | 1                | 6         | 4         | 10             | No                     | 10                        | Point Set                 | Continue             |                 |
-| 4           | 2                | 3         | 3         | 6              | No                     | 10                        | Continue Rolling          | Continue             |                 |
-| 4           | 3                | 5         | 5         | 10             | No                     | 10                        | Player Wins (Point Phase) | Game Over            | False           |
-
+| **Game ID** | **Roll Number** | **Die 1** | **Die 2** | **Total Roll** | **Is Come-Out Roll?** | **Point (if applicable)** | **Outcome** | **Game Status** | **Play Again?** |
+|--------|--------|--------|--------|--------|--------|--------|--------|--------|--------|
+| 1 | 1 | 4 | 3 | 7 | Yes | N/A | Player Wins (Direct Win) | Game Over | True |
+| 2 | 1 | 1 | 2 | 3 | Yes | N/A | Player Loses (Direct Loss) | Game Over | True |
+| 3 | 1 | 3 | 2 | 5 | No | 5 | Point Set | Continue |  |
+| 3 | 2 | 4 | 3 | 7 | No | 5 | Player Loses (Point Phase) | Game Over | True |
+| 4 | 1 | 6 | 4 | 10 | No | 10 | Point Set | Continue |  |
+| 4 | 2 | 3 | 3 | 6 | No | 10 | Continue Rolling | Continue |  |
+| 4 | 3 | 5 | 5 | 10 | No | 10 | Player Wins (Point Phase) | Game Over | False |
 
 ## Summary data structure {#sec-game-summary-data}
 
 Draw/sketch a summary tabular data structure to store summary information from a single game of craps.\
 Hint: Each game of craps should yield a single row in your table.
 
-| **Game ID** | **Total Rolls** | **Point (if applicable)** | **Outcome**         | **Play Again?** |
-|-------------|-----------------|---------------------------|---------------------|-----------------|
-| 1           | 1               | N/A                       | Player Wins         | True            |
-| 2           | 1               | N/A                       | Player Loses        | True            |
-| 3           | 2               | 5                         | Player Loses        | True            |
-| 4           | 3               | 10                        | Player Wins         | False           |
-
+| **Game ID** | **Total Rolls** | **Point (if applicable)** | **Outcome** | **Play Again?** |
+|---------------|---------------|---------------|---------------|---------------|
+| 1 | 1 | N/A | Player Wins | True |
+| 2 | 1 | N/A | Player Loses | True |
+| 3 | 2 | 5 | Player Loses | True |
+| 4 | 3 | 10 | Player Wins | False |
 
 # Simulating a game of craps {#sec-simulation-pseudocode}
 
@@ -171,6 +167,7 @@ roll_dice <- function() {
   return(d1 + d2)
 }
 ```
+
 Here is the eval_first_roll function.
 
 ```         
@@ -187,6 +184,7 @@ eval_first_roll <- function(roll) {
   }
 }
 ```
+
 Now let's do the eval_point_roll function.
 
 ```         
