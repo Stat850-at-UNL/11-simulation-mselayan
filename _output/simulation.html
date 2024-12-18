@@ -282,24 +282,75 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 </section>
 </section>
-<section id="variability-in-game-lengths" class="level2">
-<h2 class="anchored" data-anchor-id="variability-in-game-lengths"><strong>4. Variability in Game Lengths</strong></h2>
+<section id="summary-of-wins-and-losses" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-wins-and-losses"><strong>4. Summary of Wins and Losses</strong></h2>
 <section id="problem-statement-3" class="level3">
 <h3 class="anchored" data-anchor-id="problem-statement-3">Problem Statement</h3>
-<p>How does the length of a game vary between wins and losses?</p>
+<p>What is the total number of wins and losses across all games?</p>
 </section>
 <section id="code-3" class="level3">
 <h3 class="anchored" data-anchor-id="code-3">Code</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare game lengths between wins and losses</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>simulation_results <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count wins and losses</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>win_loss_summary <span class="ot">&lt;-</span> simulation_results <span class="sc">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(outcome) <span class="sc">%&gt;%</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_rolls =</span> <span class="fu">mean</span>(n_rolls), <span class="at">sd_rolls =</span> <span class="fu">sd</span>(n_rolls)) <span class="sc">%&gt;%</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Game Length Variability by Outcome"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"Mean Rolls"</span>, <span class="st">"Standard Deviation"</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">proportion =</span> count <span class="sc">/</span> <span class="fu">nrow</span>(simulation_results))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the summary</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>win_loss_summary <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Summary of Wins and Losses"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"Count"</span>, <span class="st">"Proportion"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Summary of Wins and Losses</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Outcome</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Count</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Proportion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">l</td>
+<td style="text-align: right;">5008</td>
+<td style="text-align: right;">0.5008</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">w</td>
+<td style="text-align: right;">4992</td>
+<td style="text-align: right;">0.4992</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="variability-in-game-lengths" class="level2">
+<h2 class="anchored" data-anchor-id="variability-in-game-lengths"><strong>5. Variability in Game Lengths</strong></h2>
+<section id="problem-statement-4" class="level3">
+<h3 class="anchored" data-anchor-id="problem-statement-4">Problem Statement</h3>
+<p>How does the length of a game vary between wins and losses?</p>
+</section>
+<section id="code-4" class="level3">
+<h3 class="anchored" data-anchor-id="code-4">Code</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare game lengths between wins and losses</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>simulation_results <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(outcome) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_rolls =</span> <span class="fu">mean</span>(n_rolls), <span class="at">sd_rolls =</span> <span class="fu">sd</span>(n_rolls)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Game Length Variability by Outcome"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"Mean Rolls"</span>, <span class="st">"Standard Deviation"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
 <caption>Game Length Variability by Outcome</caption>
@@ -331,75 +382,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="visualization-1" class="level3">
 <h3 class="anchored" data-anchor-id="visualization-1">Visualization</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot of game lengths by outcome</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(simulation_results, <span class="fu">aes</span>(<span class="at">x =</span> outcome, <span class="at">y =</span> n_rolls, <span class="at">fill =</span> outcome)) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Game Length by Outcome"</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Outcome"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Rolls"</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot of game lengths by outcome</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(simulation_results, <span class="fu">aes</span>(<span class="at">x =</span> outcome, <span class="at">y =</span> n_rolls, <span class="at">fill =</span> outcome)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Game Length by Outcome"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Outcome"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Rolls"</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="simulation_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="simulation_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<hr>
 </section>
-</section>
-<section id="summary-of-wins-and-losses" class="level2">
-<h2 class="anchored" data-anchor-id="summary-of-wins-and-losses"><strong>5. Summary of Wins and Losses</strong></h2>
-<section id="problem-statement-4" class="level3">
-<h3 class="anchored" data-anchor-id="problem-statement-4">Problem Statement</h3>
-<p>What is the total number of wins and losses across all games?</p>
-</section>
-<section id="code-4" class="level3">
-<h3 class="anchored" data-anchor-id="code-4">Code</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count wins and losses</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>win_loss_summary <span class="ot">&lt;-</span> simulation_results <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(outcome) <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">proportion =</span> count <span class="sc">/</span> <span class="fu">nrow</span>(simulation_results))</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the summary</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>win_loss_summary <span class="sc">%&gt;%</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Summary of Wins and Losses"</span>,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"Count"</span>, <span class="st">"Proportion"</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
-<caption>Summary of Wins and Losses</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Outcome</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Count</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Proportion</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">l</td>
-<td style="text-align: right;">5008</td>
-<td style="text-align: right;">0.5008</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">w</td>
-<td style="text-align: right;">4992</td>
-<td style="text-align: right;">0.4992</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
+<section id="discussion" class="level3">
+<h3 class="anchored" data-anchor-id="discussion">Discussion</h3>
+<p>The results above show wins are associated with games that are 0.8 games shorter on average. Part of this is explained by the fact a direct win is more likely to happen than a direct loss. To illustrate this, we break down all the possible outcomes that lead to direct wins and direct losses:</p>
+<ul>
+<li><p><strong>Direct win (7 and 11)</strong>: combinations include (1,6), (2,5), (3,4), (4,3), (5,2), (6,1), (5,6) and (6,5), totaling 8 different combinations out of 36 total. This translates to around 22% of all games.</p></li>
+<li><p><strong>Direct loss (2, 3 and 12)</strong>: combinations include (1,1), (1,2), (2,1) and (6,6), totaling 4 different combinations. This translates to around 11% of all games.</p></li>
+</ul>
+<p>By looking further into games that go through a point phase, which compise around 67% of all games, we analyze the length of point phase in each winning and losing scenario:</p>
+<ul>
+<li><strong>Point loss (7)</strong>: combinations include (1,6), (2,5), (3,4), (4,3), (5,2) and (6,1), totaling 6 different combinations. This is around 17% of all combinations in a point phase no matter what the point result is.</li>
+</ul>
+<p>Against:</p>
+<ul>
+<li><p><strong>Point win (4)</strong>: combinations include (1,3), (2,2) and (3,1) totaling 3 different combinations. This is 8% of all combinations in a point phase that happens in 8% of the initial rolls.</p></li>
+<li><p><strong>Point win (5)</strong>: combinations include (1,4), (2,3), (3,2) and (4,1) totaling 4 different combinations. This is 11% of all combinations in a point phase that happens in 8% of the initial rolls.</p></li>
+<li><p><strong>Point win (6)</strong>: combinations include (1,5), (2,4), (3,3), (4,2) and (5,1), totaling 5 different combinations. This is 14% of all combinations in a point phase that happens in 8% of the initial rolls.</p></li>
+<li><p><strong>Point win (8)</strong>: combinations include (2,6), (3,5), (4,4), (5,3) and (6,2), totaling 5 different combinations. This is 14% of all combinations in a point phase that happens in 14% of the initial rolls.</p></li>
+<li><p><strong>Point win (9)</strong>: combinations include (3,6), (4,5), (5,4) and (6,3), totaling 4 different combinations. This is 11% of all combinations in a point phase that happens in 8% of the initial rolls.</p></li>
+<li><p><strong>Point win (10)</strong>: combinations include (4,6), (5,5) and (6,4), totaling 3 different combinations. This is 8% of all combinations in a point phase that happens in 8% of the initial rolls.</p></li>
+</ul>
+<p>For games that enter the Point Phase (67% of all games), there is a weighted average of approximately 12% chance of rolling a winning combination and a consistent 17% chance of rolling a loss (since only one result leads to a loss). This implies that games in the Point Phase are expected to be shorter when they end in a loss. However, this effect counteracts the shorter game lengths seen in direct wins compared to direct losses. Despite this, wins still average 0.8 rolls shorter than losses, indicating that the Point Phase effect does not completely offset the difference in length between direct wins and direct losses. Let’s explore this further.</p>
+<p>If we account the chance of getting a winning result in a point game is 12% on average and point games comprise 67% of all games, this gives us 8% chance of getting a winning result in a point game with respect to all games. This, along with 22% chance of a direct win, adds up to a total of 30%. On the other hand, the chance of losing in a point game with respect to all games is around 11%. This, along with 11% chance of getting a direct loss, adds up to 22%. This means wins, on a global scale, should be associated with less rolls, which is what our results show. This approach is not one to be lauded for accuracy, but it goes a long way to explain and rationalize the variability in game length we obtained in the simulation.</p>
 <hr>
 </section>
 </section>
@@ -416,7 +439,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="variability-in-game-lengths-across-outcomes." class="level3">
 <h3 class="anchored" data-anchor-id="variability-in-game-lengths-across-outcomes.">Variability in game lengths across outcomes.</h3>
-<p>Wins are associated with shorter games. This is due to the fact a direct win is more likely to happen than a direct loss (7 and 11 result from 8 collective combinations while 2, 3 and 12 result from 4 collective combinations).</p>
+<p>Wins are associated with shorter games. This is due to the fact a direct win is more likely to happen than a direct loss (7 and 11 result from 8 collective combinations while 2, 3 and 12 result from 4 collective combinations). This difference is not fully offset by the point games ending in loss being shorter on average, which leaves winning games at 0.8 rolls shorter than losses.</p>
 </section>
 <section id="total-wins-and-losses-across-simulations" class="level3">
 <h3 class="anchored" data-anchor-id="total-wins-and-losses-across-simulations">Total wins and losses across simulations</h3>

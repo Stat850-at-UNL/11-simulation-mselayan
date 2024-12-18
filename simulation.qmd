@@ -106,7 +106,32 @@ data.frame(
 
 ------------------------------------------------------------------------
 
-## **4. Variability in Game Lengths**
+## **4. Summary of Wins and Losses**
+
+### Problem Statement
+
+What is the total number of wins and losses across all games?
+
+### Code
+
+```{r, message=FALSE, warning=FALSE}
+# Count wins and losses
+win_loss_summary <- simulation_results %>%
+  group_by(outcome) %>%
+  summarize(count = n(), proportion = count / nrow(simulation_results))
+
+# Display the summary
+win_loss_summary %>%
+  kbl(
+    caption = "Summary of Wins and Losses",
+    col.names = c("Outcome", "Count", "Proportion")
+  ) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
+
+------------------------------------------------------------------------
+
+## **5. Variability in Game Lengths**
 
 ### Problem Statement
 
@@ -141,30 +166,35 @@ ggplot(simulation_results, aes(x = outcome, y = n_rolls, fill = outcome)) +
   scale_fill_brewer(palette = "Set1")
 ```
 
-------------------------------------------------------------------------
+### Discussion
 
-## **5. Summary of Wins and Losses**
+The results above show wins are associated with games that are 0.8 games shorter on average. Part of this is explained by the fact a direct win is more likely to happen than a direct loss. To illustrate this, we break down all the possible outcomes that lead to direct wins and direct losses:
 
-### Problem Statement
+-   **Direct win (7 and 11)**: combinations include (1,6), (2,5), (3,4), (4,3), (5,2), (6,1), (5,6) and (6,5), totaling 8 different combinations out of 36 total. This translates to around 22% of all games.
 
-What is the total number of wins and losses across all games?
+-   **Direct loss (2, 3 and 12)**: combinations include (1,1), (1,2), (2,1) and (6,6), totaling 4 different combinations. This translates to around 11% of all games.
 
-### Code
+By looking further into games that go through a point phase, which compise around 67% of all games, we analyze the length of point phase in each winning and losing scenario:
 
-```{r, message=FALSE, warning=FALSE}
-# Count wins and losses
-win_loss_summary <- simulation_results %>%
-  group_by(outcome) %>%
-  summarize(count = n(), proportion = count / nrow(simulation_results))
+-   **Point loss (7)**: combinations include (1,6), (2,5), (3,4), (4,3), (5,2) and (6,1), totaling 6 different combinations. This is around 17% of all combinations in a point phase no matter what the point result is.
 
-# Display the summary
-win_loss_summary %>%
-  kbl(
-    caption = "Summary of Wins and Losses",
-    col.names = c("Outcome", "Count", "Proportion")
-  ) %>%
-  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
-```
+Against:
+
+-   **Point win (4)**: combinations include (1,3), (2,2) and (3,1) totaling 3 different combinations. This is 8% of all combinations in a point phase that happens in 8% of the initial rolls.
+
+-   **Point win (5)**: combinations include (1,4), (2,3), (3,2) and (4,1) totaling 4 different combinations. This is 11% of all combinations in a point phase that happens in 8% of the initial rolls.
+
+-   **Point win (6)**: combinations include (1,5), (2,4), (3,3), (4,2) and (5,1), totaling 5 different combinations. This is 14% of all combinations in a point phase that happens in 8% of the initial rolls.
+
+-   **Point win (8)**: combinations include (2,6), (3,5), (4,4), (5,3) and (6,2), totaling 5 different combinations. This is 14% of all combinations in a point phase that happens in 14% of the initial rolls.
+
+-   **Point win (9)**: combinations include (3,6), (4,5), (5,4) and (6,3), totaling 4 different combinations. This is 11% of all combinations in a point phase that happens in 8% of the initial rolls.
+
+-   **Point win (10)**: combinations include (4,6), (5,5) and (6,4), totaling 3 different combinations. This is 8% of all combinations in a point phase that happens in 8% of the initial rolls.
+
+For games that enter the Point Phase (67% of all games), there is a weighted average of approximately 12% chance of rolling a winning combination and a consistent 17% chance of rolling a loss (since only one result leads to a loss). This implies that games in the Point Phase are expected to be shorter when they end in a loss. However, this effect counteracts the shorter game lengths seen in direct wins compared to direct losses. Despite this, wins still average 0.8 rolls shorter than losses, indicating that the Point Phase effect does not completely offset the difference in length between direct wins and direct losses. Let’s explore this further.
+
+If we account the chance of getting a winning result in a point game is 12% on average and point games comprise 67% of all games, this gives us 8% chance of getting a winning result in a point game with respect to all games. This, along with 22% chance of a direct win, adds up to a total of 30%. On the other hand, the chance of losing in a point game with respect to all games is around 11%. This, along with 11% chance of getting a direct loss, adds up to 22%. This means wins, on a global scale, should be associated with less rolls, which is what our results show. This approach is not one to be lauded for accuracy, but it goes a long way to explain and rationalize the variability in game length we obtained in the simulation.
 
 ------------------------------------------------------------------------
 
@@ -173,13 +203,17 @@ win_loss_summary %>%
 This document analyzes craps simulations to uncover interesting probabilities and patterns.
 
 ### The distribution of points during the Point Phase
-Point outcomes that result from more combinations of two dice being rolled are more likely to occur, which makes sense. We can see that Point outcome 8, which results from [(2,6), (3,5), (4,4), (5,3), (6,2)], and Point outcome 6, which results from 5 combinations too, correspond to the two highest probabilities. 
+
+Point outcomes that result from more combinations of two dice being rolled are more likely to occur, which makes sense. We can see that Point outcome 8, which results from \[(2,6), (3,5), (4,4), (5,3), (6,2)\], and Point outcome 6, which results from 5 combinations too, correspond to the two highest probabilities.
 
 ### The probability of winning in the Point Phase
-You are more likely to lose than to win when entering a Point Phase. This aligns with the fact a roll of 7, which results in a loss, is more likely to happen than any Point roll that leads to a win. A roll of 7 results from 6 combinations [(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)], and therefore, has a higher probability to occur. 
 
-### Variability in game lengths across outcomes. 
-Wins are associated with shorter games. This is due to the fact a direct win is more likely to happen than a direct loss (7 and 11 result from 8 collective combinations while 2, 3 and 12 result from 4 collective combinations).
+You are more likely to lose than to win when entering a Point Phase. This aligns with the fact a roll of 7, which results in a loss, is more likely to happen than any Point roll that leads to a win. A roll of 7 results from 6 combinations \[(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)\], and therefore, has a higher probability to occur.
+
+### Variability in game lengths across outcomes.
+
+Wins are associated with shorter games. This is due to the fact a direct win is more likely to happen than a direct loss (7 and 11 result from 8 collective combinations while 2, 3 and 12 result from 4 collective combinations). This difference is not fully offset by the point games ending in loss being shorter on average, which leaves winning games at 0.8 rolls shorter than losses.
 
 ### Total wins and losses across simulations
+
 This is also a bit tricky since a direct win is more likely to happen than a direct loss, however, a loss in a point phase is more likely to happen. It seems with the point phase results incorporated, we have equal of chance of winning/losing.
